@@ -1,0 +1,10 @@
+{
+  "files.associations": {
+    "*.m": "matlab",
+    "*.html": "html",
+    "fdfs_client.h": "c",
+    "shared_func.h": "c",
+    "logger.h": "c",
+    "mutex": "cpp"
+  }
+}
