@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+/software/
+
+temp.cpp
