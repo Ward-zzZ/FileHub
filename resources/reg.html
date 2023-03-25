@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>网盘注册</title>
+  <script>
+    function validateForm(event) {
+      event.preventDefault();  // 阻止表单提交的默认行为
+      var formData = {
+        userName: document.getElementById("username").value,
+        nickName: document.getElementById("nickname").value,
+        firstPwd: document.getElementById("password").value,
+        email: document.getElementById("email").value
+      };
+
+      if (formData.firstPwd.length !== 1) {
+        alert("密码必须是6位，请重新输入！");
+        return false;
+      }
+
+      if (formData.firstPwd != document.getElementById("confirm_password").value) {
+        alert("两次输入密码不一致，请重新输入！");
+        return false;
+      }
+
+      fetch('/reg', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('网络错误');
+          }
+          return response.json();
+        })
+        .then(data => {
+          const code = data.code;
+          switch (code) {
+            case "004":
+              alert("注册失败");
+              break;
+            case "002":
+              alert("注册成功");
+              window.location.href = "http://8.130.23.112/login.html";
+              break;
+            case "003":
+              alert("用户已存在");
+              break;
+            default:
+              alert("未知错误，请联系管理员！");
+              break;
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+
+      return true;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var form = document.querySelector('form');
+      form.addEventListener('submit', validateForm);
+    });
+  </script>
+</head>
+
+<body>
+  <h1>网盘注册</h1>
+  <form method="POST" action="/reg">
+    <label for="username">用户名:</label>
+    <input type="text" id="username" name="username" required><br>
+    <label for="nickname">昵称:</label>
+    <input type="text" id="nickname" name="nickname" required><br>
+    <label for="password">密码:</label>
+    <input type="password" id="password" name="password" required><br>
+    <label for="confirm_password">确认密码:</label>
+    <input type="password" id="confirm_password" name="confirm_password" required><br>
+    <label for="email">邮箱:</label>
+    <input type="email" id="email" name="email" required><br>
+    <input type="submit" value="注册">
+  </form>
+</body>
+
+</html>

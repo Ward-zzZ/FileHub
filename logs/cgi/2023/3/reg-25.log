@@ -1,0 +1,8 @@
+[DEBUG] ===20230325-110031,main[326]=== ret = 110
+[INFO] ===20230325-110031,main[327]=== buf = {"userName":"mf2123193@smail.nju.edu.cn","nickName":"131223=","firstPwd":"1","email":"yf2501362421@gmail.com"}
+
+[DEBUG] ===20230325-110031,user_register[193]=== reg_buf = {"userName":"mf2123193@smail.nju.edu.cn","nickName":"131223=","firstPwd":"1","email":"yf2501362421@gmail.com"}
+[INFO] ===20230325-110031,user_register[207]=== mysql_user = root, mysql_pwd = yf990103, mysql_db = filehub
+[INFO] ===20230325-110031,user_register[220]=== user = mf2123193@smail.nju.edu.cn, nick_name = 131223=, pwd = 1,email = yf2501362421@gmail.com
+[INFO] ===20230325-110031,user_register[249]=== 用户mf2123193@smail.nju.edu.cn已存在
+[DEBUG] ===20230325-110031,main[353]=== out = {"code":"003"}

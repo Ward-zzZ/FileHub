@@ -5,6 +5,9 @@
     "fdfs_client.h": "c",
     "shared_func.h": "c",
     "logger.h": "c",
-    "mutex": "cpp"
+    "mutex": "cpp",
+    "deal_mysql.h": "c",
+    "mysql.h": "c",
+    "fcgi_config.h": "c"
   }
 }
