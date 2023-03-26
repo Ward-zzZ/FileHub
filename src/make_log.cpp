@@ -1,3 +1,11 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <cstdarg>
+#include <chrono>
+#include <iomanip>
+#include <filesystem>
 #include "make_log.h"
 namespace fs = std::filesystem;//这个是C++17的新特性，用来创建目录的
 
@@ -60,7 +68,7 @@ void dumpmsg_to_file(const char *module_name, const char *proc_name, const std::
 
   make_path(std::string(module_name), std::string(proc_name)); // 创建日志文件的目录
   buf_stream << mesg_stream.str()<< fmtmesg << std::endl;
-  filepath = "/home/ward/FileHub/logs/" + std::string(module_name) + "/" + std::to_string(now_tm->tm_year + 1900) + "/" + std::to_string(now_tm->tm_mon + 1) + "/" + std::string(proc_name) + "-" + std::to_string(now_tm->tm_mday) + ".log";
+  filepath = "/home/ward/FileHub/logs/" + std::string(module_name) + "/" + std::to_string(now_tm->tm_year + 1900) + "/" + std::to_string(now_tm->tm_mon + 1) + "/" + std::to_string(now_tm->tm_mday) + "/" + std::string(proc_name) + "-" + std::to_string(now_tm->tm_mday) + ".log";
 
   std::lock_guard<std::mutex> lock(log_lock);//lock_guard可以自动加锁和解锁，在作用域结束时自动解锁
   std::ofstream outfile(filepath, std::ios_base::app);//以追加的方式打开文件

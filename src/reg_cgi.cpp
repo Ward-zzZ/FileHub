@@ -1,3 +1,10 @@
+/**
+ * @file reg_cgi.cpp
+ * @brief  处理注册的CGI程序
+ * @author ward
+ * @version 1.0
+ * @date 2023年3月24日
+ */
 #include <iostream>
 #include <chrono>
 #include <cstdio>
@@ -19,15 +26,7 @@ const char *const REG_LOG_PROC = "reg";
 using namespace std;
 using namespace rapidjson;
 
-/**
- * @brief 解析json包
- * @param reg_buf json包
- * @param user 用户
- * @param nick_name 昵称
- * @param pwd 密码
- * @param email 邮箱
- * @return 0 成功 -1 失败
- */
+// 解析json包，获得包括用户名、昵称、密码、邮箱
 int get_reg_info(const char *reg_buf, char *user, char *nick_name, char *pwd, char *email)
 {
   // 解析json包
@@ -169,42 +168,43 @@ int process_result_one(MYSQL *conn, const char *sql_cmd, char *buf)
 }
 
 // 连接数据库
-MYSQL *mysql_conn(const string &user, const string &pwd, const string &db)
+MYSQL *mysql_conn()
 {
+  string mysql_user;
+  string mysql_pwd;
+  string mysql_db;
+  int ret = get_mysql_info(mysql_user, mysql_pwd, mysql_db); // 读取配置文件，获得数据库的用户名、密码、数据库名
+  if (ret != 0)
+  {
+    LOG_DEBUG(REG_LOG_MODULE, REG_LOG_PROC, "get_mysql_info failed!");
+    return nullptr;
+  }
+  LOG_INFO(REG_LOG_MODULE, REG_LOG_PROC, "mysql_user = %s, mysql_pwd = %s, mysql_db = %s", mysql_user.c_str(), mysql_pwd.c_str(), mysql_db.c_str());
   MYSQL *conn = mysql_init(NULL);
   if (conn == NULL)
   {
-    return NULL;
+    return nullptr;
   }
 
-  if (mysql_real_connect(conn, "localhost", user.c_str(), pwd.c_str(), db.c_str(), 0, NULL, 0) == NULL)
+  if (mysql_real_connect(conn, "localhost", mysql_user.c_str(), mysql_pwd.c_str(), mysql_db.c_str(), 0, NULL, 0) == NULL)
   {
-    LOG_ERROR(REG_LOG_MODULE, REG_LOG_PROC, "mysql_real_connect error! user=%s, pwd=%s, db=%s", user.c_str(), pwd.c_str(), db.c_str());
+    LOG_ERROR(REG_LOG_MODULE, REG_LOG_PROC, "mysql_real_connect error! user=%s, pwd=%s, db=%s", mysql_user.c_str(), mysql_pwd.c_str(), mysql_db.c_str());
     mysql_close(conn);
-    return NULL;
+    return nullptr;
   }
 
   return conn;
 }
 
-// 注册用户，成功返回0，失败返回-1，该用户已存在返回-2
-int user_register(const char *reg_buf)
+/**
+ * @brief 注册用户
+ * @param conn 数据库连接
+ * @param reg_buf 注册信息
+ * @return 0成功，-1失败， -2用户名已存在
+ */
+int user_register(MYSQL *conn, const char *reg_buf)
 {
-  LOG_DEBUG(REG_LOG_MODULE, REG_LOG_PROC, "reg_buf = %s", reg_buf);
   int ret = 0;
-  MYSQL *conn = NULL;
-
-  // 获取数据库用户名、用户密码、数据库标识等信息
-  string mysql_user;
-  string mysql_pwd;
-  string mysql_db;
-  ret = get_mysql_info(mysql_user, mysql_pwd, mysql_db);
-  if (ret != 0)
-  {
-    LOG_DEBUG(REG_LOG_MODULE, REG_LOG_PROC, "get_mysql_info failed!");
-    return ret;
-  }
-  LOG_INFO(REG_LOG_MODULE, REG_LOG_PROC, "mysql_user = %s, mysql_pwd = %s, mysql_db = %s", mysql_user.c_str(), mysql_pwd.c_str(), mysql_db.c_str());
 
   // 获取注册用户的信息
   char user[128];
@@ -218,28 +218,15 @@ int user_register(const char *reg_buf)
     return ret;
   }
   LOG_INFO(REG_LOG_MODULE, REG_LOG_PROC, "user = %s, nick_name = %s, pwd = %s,email = %s", user, nick_name, pwd, email);
-  // cout << "user = " << user << ", nick_name = " << nick_name << ", pwd = " << pwd << ", email = " << email << endl;
-
-  // 连接数据库
-  conn = mysql_conn(mysql_user, mysql_pwd, mysql_db);
-  if (conn == NULL)
-  {
-    LOG_DEBUG(REG_LOG_MODULE, REG_LOG_PROC, "mysql_conn failed!");
-    // cout << "mysql_conn err" << endl;
-    return -1;
-  }
-
-  // 设置数据库编码，主要处理中文编码问题
-  if (mysql_query(conn, "set names utf8") != 0)
-  {
-    LOG_DEBUG(REG_LOG_MODULE, REG_LOG_PROC, "set names utf8 failed!");
-    // cout << "set names utf8 err" << endl;
-    mysql_close(conn);
-    return -1;
-  }
 
   char sql_cmd[SQL_MAX_LEN] = {0};
   sprintf(sql_cmd, "select * from user where name = '%s'", user);
+
+  if (conn == NULL)
+  {
+    LOG_ERROR(REG_LOG_MODULE, REG_LOG_PROC, "no mysql connection");
+    return -1;
+  }
 
   // 查看该用户是否存在
   int ret2 = process_result_one(conn, sql_cmd, NULL);
@@ -247,7 +234,6 @@ int user_register(const char *reg_buf)
   {
     // 如果存在
     LOG_INFO(REG_LOG_MODULE, REG_LOG_PROC, "用户%s已存在", user);
-    mysql_close(conn);
     return -2;
   }
 
@@ -263,15 +249,13 @@ int user_register(const char *reg_buf)
   if (mysql_query(conn, sql_cmd) != 0)
   {
     LOG_ERROR(REG_LOG_MODULE, REG_LOG_PROC, "插入失败：%s", mysql_error(conn));
-    mysql_close(conn);
     return -1;
   }
 
-  mysql_close(conn);
   return 0;
 }
 
-//将状态码转换为json格式的字符串
+// 将状态码转换为json格式的字符串
 char *return_status(const char *status_num)
 {
   Document doc;
@@ -290,12 +274,27 @@ char *return_status(const char *status_num)
   return out;
 }
 
-
 int main()
 {
   FCGX_Init();
   FCGX_Request request;
   FCGX_InitRequest(&request, 0, 0);
+
+  // 建立一个数据库连接,避免每次注册都要建立连接
+  MYSQL *conn = NULL;
+  conn = mysql_conn();
+  if (conn == NULL)
+  {
+    LOG_DEBUG(REG_LOG_MODULE, REG_LOG_PROC, "mysql_conn failed!");
+    return -1;
+  }
+  // 设置数据库编码，主要处理中文编码问题
+  if (mysql_query(conn, "set names utf8") != 0)
+  {
+    LOG_DEBUG(REG_LOG_MODULE, REG_LOG_PROC, "set names utf8 failed!");
+    mysql_close(conn);
+    return -1;
+  }
 
   while (FCGX_Accept_r(&request) == 0)
   {
@@ -323,8 +322,7 @@ int main()
         LOG_INFO(REG_LOG_MODULE, REG_LOG_PROC, "FCGX_GetStr() err");
         continue;
       }
-      LOG_DEBUG(REG_LOG_MODULE, REG_LOG_PROC, "ret = %d", ret);
-      LOG_INFO(REG_LOG_MODULE, REG_LOG_PROC, "buf = %s\n", buf);
+      LOG_INFO(REG_LOG_MODULE, REG_LOG_PROC, "buf = %s", buf);
 
       // 注册用户，成功返回0，失败返回-1, 该用户已存在返回-2
       /*
@@ -333,24 +331,27 @@ int main()
       该用户已存在：{"code":"003"}
       失败：{"code":"004"}
       */
-      ret = user_register(buf);
+      ret = user_register(conn, buf);
       if (ret == 0)
-      { // 注册成功
-        out = return_status("002");//以json格式的字符串返回
+      {
+        // 注册成功
+        out = return_status("002"); // 以json格式的字符串返回
       }
       else if (ret == -1)
-      { // 注册失败
+      {
+        // 注册失败
         out = return_status("004");
       }
       else if (ret == -2)
-      { // 用户已存在
+      {
+        // 用户已存在
         out = return_status("003");
       }
 
       if (out != nullptr)
       {
         FCGX_FPrintF(request.out, "%s", out); // 返回给web服务器
-        LOG_DEBUG(REG_LOG_MODULE, REG_LOG_PROC, "out = %s", out);
+        LOG_INFO(REG_LOG_MODULE, REG_LOG_PROC, "out = %s", out);
         free(out); // 释放内存
       }
     }
@@ -358,5 +359,6 @@ int main()
     FCGX_Finish_r(&request);
   }
 
+  mysql_close(conn);
   return 0;
 }

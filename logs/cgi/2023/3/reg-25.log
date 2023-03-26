@@ -1,8 +1,21 @@
-[DEBUG] ===20230325-110031,main[326]=== ret = 110
-[INFO] ===20230325-110031,main[327]=== buf = {"userName":"mf2123193@smail.nju.edu.cn","nickName":"131223=","firstPwd":"1","email":"yf2501362421@gmail.com"}
-
-[DEBUG] ===20230325-110031,user_register[193]=== reg_buf = {"userName":"mf2123193@smail.nju.edu.cn","nickName":"131223=","firstPwd":"1","email":"yf2501362421@gmail.com"}
-[INFO] ===20230325-110031,user_register[207]=== mysql_user = root, mysql_pwd = yf990103, mysql_db = filehub
-[INFO] ===20230325-110031,user_register[220]=== user = mf2123193@smail.nju.edu.cn, nick_name = 131223=, pwd = 1,email = yf2501362421@gmail.com
-[INFO] ===20230325-110031,user_register[249]=== 用户mf2123193@smail.nju.edu.cn已存在
-[DEBUG] ===20230325-110031,main[353]=== out = {"code":"003"}
+[INFO] ===20230325-122303,mysql_conn[183]=== mysql_user = root, mysql_pwd = yf990103, mysql_db = filehub
+[INFO] ===20230325-122326,main[315]=== buf = {"userName":"mf2123193@smail.nju.edu.cn","nickName":"131223=","firstPwd":"1","email":"yf2501362421@gmail.com"}
+[INFO] ===20230325-122326,user_register[216]=== user = mf2123193@smail.nju.edu.cn, nick_name = 131223=, pwd = 1,email = yf2501362421@gmail.com
+[INFO] ===20230325-122326,user_register[226]=== 用户mf2123193@smail.nju.edu.cn已存在
+[DEBUG] ===20230325-122326,main[341]=== out = {"code":"003"}
+[INFO] ===20230325-123342,mysql_conn[176]=== mysql_user = root, mysql_pwd = yf990103, mysql_db = filehub
+[INFO] ===20230325-123448,mysql_conn[176]=== mysql_user = root, mysql_pwd = yf990103, mysql_db = filehub
+[INFO] ===20230325-140848,mysql_conn[182]=== mysql_user = root, mysql_pwd = yf990103, mysql_db = filehub
+[INFO] ===20230325-140904,main[319]=== buf = {"userName":"MF21230193","nickName":"mf2123193@smail.nju.edu.cn","firstPwd":"1","email":"yf2501362421@gmail.com"}
+[INFO] ===20230325-140904,user_register[220]=== user = MF21230193, nick_name = mf2123193@smail.nju.edu.cn, pwd = 1,email = yf2501362421@gmail.com
+[INFO] ===20230325-140904,user_register[230]=== 用户MF21230193已存在
+[INFO] ===20230325-140904,main[348]=== out = {"code":"003"}
+[INFO] ===20230325-185411,mysql_conn[182]=== mysql_user = root, mysql_pwd = yf990103, mysql_db = filehub
+[INFO] ===20230325-185450,main[319]=== buf = {"userName":"MF21230193","nickName":"1","firstPwd":"1","email":"1954799543@qq.com"}
+[INFO] ===20230325-185450,user_register[220]=== user = MF21230193, nick_name = 1, pwd = 1,email = 1954799543@qq.com
+[INFO] ===20230325-185450,user_register[230]=== 用户MF21230193已存在
+[INFO] ===20230325-185450,main[348]=== out = {"code":"003"}
+[INFO] ===20230325-185455,main[319]=== buf = {"userName":"MF21230193","nickName":"1","firstPwd":"1","email":"1954799543@qq.com"}
+[INFO] ===20230325-185455,user_register[220]=== user = MF21230193, nick_name = 1, pwd = 1,email = 1954799543@qq.com
+[INFO] ===20230325-185455,user_register[230]=== 用户MF21230193已存在
+[INFO] ===20230325-185455,main[348]=== out = {"code":"003"}

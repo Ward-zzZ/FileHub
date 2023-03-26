@@ -1,9 +1,63 @@
-<!DOCTYPE html>
-<html>
-
 <head>
   <meta charset="UTF-8">
   <title>网盘登录</title>
+  <script>
+    function validateForm(event) {
+      event.preventDefault();  // 阻止表单提交的默认行为
+      var formData = {
+        userName: document.getElementById("username").value,
+        passWord: document.getElementById("password").value,
+      };
+
+      if (formData.passWord.length !== 1) {
+        alert("密码必须是6位，请重新输入！");
+        return false;
+      }
+
+
+      fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('网络错误');
+          }
+          return response.json();
+        })
+        .then(data => {
+          const code = data.code;
+          switch (code) {
+            case "000":
+              alert("登录成功");
+              break;
+            case "001":
+              alert("登录失败，用户名或密码错误");
+              <!-- window.location.href = "http://8.130.23.112/login.html"; -->
+              break;
+            case "002":
+              alert("set_token failed!");
+              break;
+            default:
+              alert("");
+              break;
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+
+      return true;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var form = document.querySelector('form');
+      form.addEventListener('submit', validateForm);
+    });
+  </script>
 </head>
 
 <body>
@@ -14,6 +68,7 @@
     <label for="passWord">密码:</label>
     <input type="password" id="password" name="password" required><br>
     <input type="submit" value="登录">
+    <button onclick="window.location.href='reg.html'">跳转到注册页面</button>
   </form>
 </body>
 

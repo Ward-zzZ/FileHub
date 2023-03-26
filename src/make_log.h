@@ -1,14 +1,6 @@
 #ifndef _MAKE_LOG_H_
 #define _MAKE_LOG_H_
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <cstdarg>
-#include <chrono>
-#include <iomanip>
 #include <mutex>
-#include <filesystem>
 
 extern std::mutex log_lock;
 enum class LogLevel
