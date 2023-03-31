@@ -1,8 +1,6 @@
 #ifndef UTIL_CGI_H
 #define UTIL_CGI_H
 
-#include <string>
-
 // 文件名字长度
 const int FILE_NAME_LEN = 256;
 
@@ -43,7 +41,13 @@ const char *const UTIL_LOG_MODULE = "cgi";
 const char *const UTIL_LOG_PROC = "util";
 #define CFG_PATH "../conf/cfg.json" // 配置文件路径
 
-//从cfg.json中读取配置信息
+// 从cfg.json中读取配置信息
 int get_cfg_value(const char *cfgpath, const char *title, const char *key, string &value);
+
+// 从请求中获取参数
+int query_parse_key_value(const char *query, const char *key, char *value, int *value_len_p);
+
+// 从redis中验证token
+bool validate_token(sw::redis::Redis *redis, const char *user, const char *token);
 
 #endif
