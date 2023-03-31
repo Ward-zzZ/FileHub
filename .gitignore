@@ -41,3 +41,5 @@ other_file
 /common
 /logs
 /redis
+.idea
+test
