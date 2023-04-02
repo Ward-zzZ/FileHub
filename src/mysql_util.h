@@ -13,7 +13,7 @@ int get_mysql_info(string &user, string &pwd, string &db);
 MYSQL *mysql_conn();
 
 // 连接redis
-Redis *redis_conn();
+sw::redis::Redis *redis_conn();
 
 // 处理数据库查询结果，结果集保存在buf，只处理一条记录，一个字段, 如果buf为nullptr，无需保存结果集，只做判断有没有此记录
 int process_result_one(MYSQL *conn, const char *sql_cmd, char *buf);

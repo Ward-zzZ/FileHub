@@ -7,6 +7,7 @@
 #include "fdfs_client.h"
 #include "logger.h"
 #include "make_log.h"
+#include "fdfs_api.h"
 
 int fdfs_upload_file(const char *conf_file, const char *myfile, char *file_id) {
     char group_name[FDFS_GROUP_NAME_MAX_LEN + 1];

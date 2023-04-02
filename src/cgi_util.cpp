@@ -1,3 +1,5 @@
+#include <fstream>
+#include <iostream>
 #include <chrono>
 #include <mysql/mysql.h>
 #include <sw/redis++/redis++.h>
@@ -66,7 +68,7 @@ char *memstr(char *full_data, int full_data_len, char *substr) {
     int i;
     int substr_len;
 
-    if (full_data == NULL || full_data_len <= 0 || substr == NULL || *substr == '\0' {
+    if (full_data == NULL || full_data_len <= 0 || substr == NULL || *substr == '\0') {
         return NULL;
     }
 
@@ -243,4 +245,3 @@ bool validate_token(sw::redis::Redis *redis, const char *user, const char *token
         return false;
     }
 }
-g
