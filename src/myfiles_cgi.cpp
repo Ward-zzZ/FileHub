@@ -1,3 +1,10 @@
+/**
+ * @file myfiles_cgi.cpp
+ * @brief 从数据库中获取用户文件数量和详细信息
+ * @version 1.0
+ * @date 2023-04-01
+ * @author ward
+ */
 #include "fcgi_config.h"
 #include "fcgi_stdio.h"
 #include <iostream>
@@ -347,7 +354,7 @@ int main() {
             char buf[4 * 1024] = {0};
             int ret = FCGX_GetStr(buf, len, request.in); // 从标准输入(web服务器)读取内容
             if (ret == 0) {
-                LOG_ERROR(MYFILES_LOG_MODULE, MYFILES_LOG_PROC, "fread(buf, 1, len, stdin) err\n");
+                LOG_ERROR(MYFILES_LOG_MODULE, MYFILES_LOG_PROC, "FCGX_GetStr(file_buf, len, request.in) err\n");
                 continue;
             }
 

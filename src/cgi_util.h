@@ -41,6 +41,15 @@ const char *const UTIL_LOG_MODULE = "cgi";
 const char *const UTIL_LOG_PROC = "util";
 #define CFG_PATH "../conf/cfg.json" // 配置文件路径
 
+// 去除字符串前后的空格
+int trim_space(char *inbuf);
+
+// 寻找子串出现的位置
+char *memstr(char *full_data, int full_data_len, char *substr);
+
+// 获取文件后缀名
+int get_file_suffix(const char *file_name, char *suffix);
+
 // 从cfg.json中读取配置信息
 int get_cfg_value(const char *cfgpath, const char *title, const char *key, string &value);
 
