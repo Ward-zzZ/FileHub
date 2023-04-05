@@ -433,7 +433,7 @@ int main()
         else
         {
           // token验证失败，返回错误码'111'
-          return_myfiles_status(-1, 1);
+          return_myfiles_status(-1, 0);
         }
       }
     }

@@ -9,5 +9,20 @@
     "deal_mysql.h": "c",
     "mysql.h": "c",
     "fcgi_config.h": "c"
-  }
+  },
+  "sqltools.connections": [
+    {
+      "mysqlOptions": {
+        "authProtocol": "default"
+      },
+      "previewLimit": 50,
+      "server": "8.130.23.112",
+      "port": 3306,
+      "driver": "MySQL",
+      "name": "filehub",
+      "database": "filehub",
+      "username": "root",
+      "askForPassword": true
+    }
+  ]
 }
