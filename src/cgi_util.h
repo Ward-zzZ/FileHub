@@ -1,6 +1,26 @@
 #ifndef UTIL_CGI_H
 #define UTIL_CGI_H
 
+#include <mysql/mysql.h>
+#include <sw/redis++/redis++.h>
+
+#include <chrono>
+#include <fstream>
+#include <iostream>
+
+#include "fcgi_config.h"
+#include "fcgi_stdio.h"
+#include "make_log.h"
+#include "mysql_util.h"
+#include "rapidjson/document.h"
+#include "rapidjson/istreamwrapper.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
+
+using namespace std;
+using namespace rapidjson;
+using namespace sw::redis;
+
 // 文件名字长度
 const int FILE_NAME_LEN = 256;
 
@@ -39,24 +59,30 @@ const int PIC_URL_LEN = 256;
 
 const char *const UTIL_LOG_MODULE = "cgi";
 const char *const UTIL_LOG_PROC = "util";
-#define CFG_PATH "../conf/cfg.json" // 配置文件路径
+#define CFG_PATH "../conf/cfg.json"  // 配置文件路径
 
 // 去除字符串前后的空格
-int trim_space(char *inbuf);
+int trimSpace(char *inbuf);
 
 // 寻找子串出现的位置
 char *memstr(char *full_data, int full_data_len, char *substr);
 
 // 获取文件后缀名
-int get_file_suffix(const char *file_name, char *suffix);
+int getFileSuffix(const char *file_name, char *suffix);
 
 // 从cfg.json中读取配置信息
-int get_cfg_value(const char *cfgpath, const char *title, const char *key, string &value);
+int getCfgValue(const char *cfgpath, const char *title, const char *key,
+                  string &value);
 
 // 从请求中获取参数
-int query_parse_key_value(const char *query, const char *key, char *value, int *value_len_p);
+int queryParseKeyValue(const char *query, const char *key, char *value,
+                          int *value_len_p);
 
 // 从redis中验证token
-bool validate_token(sw::redis::Redis *redis, const char *user, const char *token);
+bool validateToken(sw::redis::Redis *redis, const char *user,
+                    const char *token);
+
+// 将状态码转为json格式
+char *returnStatus(const char *status_num);
 
 #endif

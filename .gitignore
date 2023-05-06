@@ -43,3 +43,7 @@ other_file
 /redis
 .idea
 test
+.vscode
+/resources
+/test
+
